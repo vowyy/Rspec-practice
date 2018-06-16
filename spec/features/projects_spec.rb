@@ -7,8 +7,14 @@ RSpec.feature "Projects", type: :feature do
     # sign_in_as user
     # or the one provided by Devise:
     sign_in user, scope: :user
+    # login_asをラップしている
+    # def sign_in(resource)
+    #   login_as(resource, scope: warden_scope(resource))
+    # end
     visit root_path
-
+    # 自前のsign_in_asでは最初にvisit root_pathをしているのでrootにいる状態。
+    # だが、今回のdeviseのヘルパーはセッションを作成するだけなので、どこからワークフローを開始するのかテスト内で明示的に記述
+    # テスト内で明示的に次のステップを記述する
     expect {
       click_link "New Project"
       fill_in "Name", with: "Test Project"
@@ -35,8 +41,7 @@ RSpec.feature "Projects", type: :feature do
     click_button "Complete"
 
     expect(project.reload.completed?).to be true
-    expect(page).to \
-      have_content "Congratulations, this project is complete!"
+    expect(page).to have_content "Congratulations, this project is complete!"
     expect(page).to have_content "Completed"
     expect(page).to_not have_button "Complete"
   end

@@ -26,8 +26,7 @@ RSpec.describe User, type: :model do
   end
 
   it "sends a welcome email on account creation" do
-    allow(UserMailer).to \
-      receive_message_chain(:welcome_email, :deliver_later)
+    allow(UserMailer).to receive_message_chain(:welcome_email, :deliver_later)
     user = FactoryBot.create(:user)
     expect(UserMailer).to have_received(:welcome_email).with(user)
   end
